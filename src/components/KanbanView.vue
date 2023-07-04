@@ -1,7 +1,8 @@
 <template>
-  <div class="flex flex-row justify-content-start align-items-start w-full">
+  <div class="flex flex-row justify-content-start align-items-start w-full" style="height: 100vh">
     <draggable
       class="dragColumn parent-grid flex flex-row justify-content-start align-items-start h-full"
+      style="height: 100vh"
       :list="tasks"
       :group="{ name: 'g1' }"
       item-key="name"
@@ -9,23 +10,26 @@
       :move="checkMove"
     >
       <template #item="{ element: column }">
-        <div class="column mr-3 h-full">
+        <div class="column mr-3 h-full" style="height: 100vh;s" :element-type="column.type">
           <div class="my-2 mx-0 flex flex-row justify-content-start align-items-center">
             <span class="py-1 px-2 text-sm column-name font-semibold border-round-xs w-auto">
               {{ column.name }}
             </span>
           </div>
-          <draggable
-            class="dragCard"
-            :list="column.tasks"
-            :group="{ name: 'g1' }"
-            item-key="name"
-            :move="checkMove"
-          >
-            <template #item="{ element: card }">
-              <Card :title="card.title" :content="card.content" />
-            </template>
-          </draggable>
+          <div v-if="column.type === 'inventoryCategory'">
+            <draggable
+              class="dragCard"
+              :list="column.tasks"
+              :group="{ name: 'g1' }"
+              item-key="name"
+              @change="log"
+              :move="checkMove"
+            >
+              <template #item="{ element: card }">
+                <Card :title="card.title" :content="card.content" :element-type="card.type" />
+              </template>
+            </draggable>
+          </div>
         </div>
       </template>
     </draggable>
@@ -49,11 +53,24 @@ export default {
       console.log(evt)
     },
     checkMove(evt) {
-      // Prevent cards from being dragged into columns and vice versa
-      if (evt.from.classList.contains('dragCard') && evt.to.classList.contains('dragColumn')) {
-        return false
+      const itemElem = evt.draggedContext.element
+      // no items outside a category
+      if (itemElem.type === 'inventoryItem') {
+        if (evt.to.childNodes.length > 0) {
+          let k = 0
+          for (let i = 0; i < evt.to.childNodes.length; i += 1) {
+            if (evt.to.childNodes[i].getAttribute('element-type') === 'inventoryCategory') {
+              k += 1
+            }
+          }
+          if (k === evt.to.childNodes.length) {
+            return false
+          }
+        } else {
+          return true
+        }
       }
-      if (evt.from.classList.contains('dragColumn') && evt.to.classList.contains('dragCard')) {
+      if (evt.from !== evt.to && itemElem.type === 'inventoryCategory') {
         return false
       }
       return true

@@ -20,32 +20,40 @@ export default {
         {
           id: 1,
           name: 'Open',
+          type: 'inventoryCategory',
           tasks: [
             {
               id: 1,
               title: 'task 2',
-              content: 'task 2 do something heres'
+              content: 'task 2 do something heres',
+              type: 'inventoryItem'
             }
           ]
         },
         {
           id: 2,
           name: 'In progress',
+          type: 'inventoryCategory',
           tasks: [
             {
               id: 1,
               title: 'task 4',
-              content: 'task 4 do something heres'
+              content: 'task 4 do something heres',
+              type: 'inventoryItem'
             }
           ]
         },
         {
           id: 3,
           name: 'Completed',
+          type: 'inventoryCategory',
           tasks: []
         }
       ]
     }
+  },
+  mounted() {
+    // console.log('MOUNTED', app)
   }
 }
 </script>
