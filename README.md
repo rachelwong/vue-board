@@ -2,13 +2,11 @@
 
 This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
+## Useful links
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- https://stackoverflow.com/questions/68178275/controlling-nesting-level-in-vue-draggable
+- https://news.ycombinator.com/item?id=10957165
+- https://codesandbox.io/s/elegant-franklin-gwl6v3?file=/src/components/NestedDraggable.vue
 
 ## Project Setup
 
