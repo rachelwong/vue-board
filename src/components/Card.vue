@@ -9,10 +9,11 @@
     @mouseout="onHover = !onHover"
   >
     <template #title>
-      <span class="card-title text-sm font-semibold line-height-4">{{ title }}</span>
+      <span v-if="title" class="card-title text-sm font-semibold line-height-4">{{ title }}</span>
+      <span v-else class="card-title--empty text-sm font-semibold line-height-4s">Untitled</span>
     </template>
     <template #content>
-      <p class="card-content text-sm">
+      <p v-if="content" class="card-content text-sm">
         {{ content }}
       </p>
     </template>
@@ -55,6 +56,12 @@ export default {
   &.hover {
     cursor: pointer;
     background-color: var(--bluegray-50);
+  }
+}
+
+.card-title {
+  &--empty {
+    color: var(--surface-400);
   }
 }
 </style>
