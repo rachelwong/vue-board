@@ -12,6 +12,8 @@ import Button from 'primevue/button'
 import Menu from 'primevue/menu'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
+import Sidebar from 'primevue/sidebar'
+import Dropdown from 'primevue/dropdown'
 
 import ClickOutside from './assets/ClickOutside'
 
@@ -25,6 +27,8 @@ app.component('PButton', Button)
 app.component('PMenu', Menu)
 app.component('PDialog', Dialog)
 app.component('PInputText', InputText)
+app.component('PSidebar', Sidebar)
+app.component('PDropdown', Dropdown)
 
 app.use(createPinia())
 app.use(router)

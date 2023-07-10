@@ -17,6 +17,16 @@ html {
   font-family: 'Lato', sans-serif;
 }
 
+/** Global Styles **/
+.text-capitalise {
+  text-transform: capitalize;
+}
+
+/** Primevue sidebar style overrides **/
+.p-sidebar-header-content {
+  width: 100%;
+}
+
 /** Primevue Card style overrides **/
 .p-card-body {
   padding: 8px 10px 6px 6px !important;
