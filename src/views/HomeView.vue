@@ -16,7 +16,8 @@
       :message="modalMessage.message"
       @close-modal="modalMessage = {}"
     />
-    <div class="toolbar">
+    <div class="toolbar flex flex-row justify-content-between align-items-center mt-2">
+      <PTabMenu v-model:activeIndex="activeNav" :model="navigationMenus" class="p-0" />
       <PButton
         class="py-1 px-2 mt-2 flex flex-row justify-content-between align-items-center"
         @click="createNewTask"
@@ -145,6 +146,13 @@ export default {
       modalMessage: {},
       selectedTask: {},
       openDetailSideBar: false,
+      activeNav: 0,
+      navigationMenus: [
+        { label: 'By Status' },
+        { label: 'Table View' },
+        { label: 'List' },
+        { label: 'Gallery' }
+      ],
       defaultData: [
         {
           id: 1,
