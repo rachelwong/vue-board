@@ -41,7 +41,12 @@
               :move="checkMove"
             >
               <template #item="{ element: card }">
-                <Card :title="card.title" :content="card.content" :element-type="card.type" />
+                <Card
+                  @click="$emit('open-details', card)"
+                  :title="card.title"
+                  :content="card.content"
+                  :element-type="card.type"
+                />
               </template>
             </draggable>
           </div>

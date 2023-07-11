@@ -1,6 +1,15 @@
 <template>
   <div style="">
     <h1 class="heading mb-0 mt-6">Job Application Tracker</h1>
+    <DetailSidebar
+      v-if="!!Object.keys(selectedTask).length"
+      :visible="openDetailSideBar"
+      :item="selectedTask"
+      :statuses="statusColumns"
+      @remove-task="($event) => removeTask($event)"
+      @add-task="($event) => updateTask($event)"
+      @close-details="closeDetails"
+    />
     <MessageModal
       :visible="!!Object.keys(modalMessage).length"
       :modal-header="modalMessage.modalHeader"
@@ -10,6 +19,7 @@
     <KanbanView
       class="w-full mt-3"
       :tasks="listData"
+      @open-details="($event) => openDetails($event)"
       @add-column="($event) => addColumn($event)"
       @add-task="addTaskItem"
       @remove-column="removeColumn"
@@ -19,14 +29,19 @@
 </template>
 
 <script>
+import { toRaw } from 'vue'
+import clonedeep from 'lodash/cloneDeep'
+
 import KanbanView from '../components/KanbanView.vue'
 import MessageModal from '../components/MessageModal.vue'
+import DetailSidebar from '../components/DetailSidebar.vue'
 
 export default {
   name: 'HomeView',
   components: {
     KanbanView,
-    MessageModal
+    MessageModal,
+    DetailSidebar
   },
   methods: {
     initStore() {
@@ -36,6 +51,14 @@ export default {
       } else {
         this.listData = storedTasks.sort((a, b) => a.id - b.id)
       }
+    },
+    openDetails(item) {
+      this.openDetailSideBar = true
+      this.selectedTask = clonedeep(toRaw(item))
+    },
+    closeDetails() {
+      this.selectedTask = {}
+      this.openDetailSideBar = false
     },
     addColumn(columnName) {
       this.listData.push({
@@ -63,12 +86,45 @@ export default {
         }
         return col
       })
+    },
+    removeTask(task) {
+      const indexToRemove = this.listData
+        .find((col) => col.name === task.status)
+        .tasks.findIndex((x) => x.id === task.id)
+      if (indexToRemove > -1) {
+        this.listData.find((col) => col.name === task.status).tasks.splice(indexToRemove, 1)
+        localStorage.setItem('tasks', JSON.stringify(this.listData))
+      }
+    },
+    updateTask(task) {
+      if (!this.statusColumns.some((col) => col.name === task.status)) this.addColumn(task.status)
+
+      if (task.id === null) {
+        this.listData
+          .find((col) => col.name === task.status)
+          .tasks.push({
+            ...task,
+            id: this.listData.find((col) => col.name === task.status).tasks.length + 1
+          })
+      } else {
+        this.listData
+          .find((col) => col.name === task.status)
+          .tasks.map((item) => {
+            if (item.id === task.id) {
+              return Object.assign(item, task)
+            }
+            return item
+          })
+      }
+      localStorage.setItem('tasks', JSON.stringify(this.listData))
     }
   },
   data() {
     return {
       listData: [],
       modalMessage: {},
+      selectedTask: {},
+      openDetailSideBar: false,
       defaultData: [
         {
           id: 1,
@@ -79,7 +135,8 @@ export default {
               id: 1,
               title: 'task 2',
               content: 'task 2 do something heres',
-              type: 'inventoryItem'
+              type: 'inventoryItem',
+              status: 'Open'
             }
           ]
         },
@@ -92,7 +149,8 @@ export default {
               id: 1,
               title: 'task 4',
               content: 'task 4 do something heres',
-              type: 'inventoryItem'
+              type: 'inventoryItem',
+              status: 'In progress'
             }
           ]
         },
@@ -103,6 +161,16 @@ export default {
           tasks: []
         }
       ]
+    }
+  },
+  computed: {
+    statusColumns() {
+      if (!this.listData.length) return []
+      return this.listData
+        .filter((item) => item.type === 'inventoryCategory')
+        .map((item) => {
+          return { id: item.id, name: item.name }
+        })
     }
   },
   mounted() {
