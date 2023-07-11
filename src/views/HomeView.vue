@@ -27,6 +27,7 @@
       </PButton>
     </div>
     <KanbanView
+      v-if="activeNav === 0"
       class="w-full mt-3"
       :tasks="listData"
       @open-details="($event) => openDetails($event)"
@@ -34,6 +35,13 @@
       @add-task="addTaskItem"
       @remove-column="removeColumn"
       @error="($event) => (modalMessage = $event)"
+    />
+    <ListView
+      v-if="activeNav === 2"
+      class="mt-3 listview"
+      :tasks="listData"
+      @create-new="createNewTask"
+      @open-details="($event) => openDetails($event)"
     />
   </div>
 </template>
@@ -43,6 +51,7 @@ import { toRaw } from 'vue'
 import clonedeep from 'lodash/cloneDeep'
 
 import KanbanView from '../components/KanbanView.vue'
+import ListView from '../components/ListView.vue'
 import MessageModal from '../components/MessageModal.vue'
 import DetailSidebar from '../components/DetailSidebar.vue'
 
@@ -51,7 +60,8 @@ export default {
   components: {
     KanbanView,
     MessageModal,
-    DetailSidebar
+    DetailSidebar,
+    ListView
   },
   methods: {
     initStore() {
@@ -211,7 +221,8 @@ export default {
 .heading {
   padding-left: 9.6rem;
 }
-.toolbar {
+.toolbar,
+.listview {
   margin: 0 9.6rem;
 }
 </style>
