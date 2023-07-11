@@ -86,7 +86,7 @@ export default {
       if (this.item.status !== this.selectedStatus)
         // if status changed, remove the old item from old column
         this.$emit('remove-task', { id: this.item.id, status: this.item.status })
-      this.$emit('add-task', payload)
+      this.$emit('update-task', payload)
       this.localVisible = false
     }
   },

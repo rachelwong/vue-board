@@ -7,7 +7,7 @@
       :item="selectedTask"
       :statuses="statusColumns"
       @remove-task="($event) => removeTask($event)"
-      @add-task="($event) => updateTask($event)"
+      @update-task="($event) => updateTask($event)"
       @close-details="closeDetails"
     />
     <MessageModal
@@ -16,6 +16,15 @@
       :message="modalMessage.message"
       @close-modal="modalMessage = {}"
     />
+    <div class="toolbar">
+      <PButton
+        class="py-1 px-2 mt-2 flex flex-row justify-content-between align-items-center"
+        @click="createNewTask"
+      >
+        <span class="material-icons mr-1">add</span>
+        <span>New</span>
+      </PButton>
+    </div>
     <KanbanView
       class="w-full mt-3"
       :tasks="listData"
@@ -72,6 +81,16 @@ export default {
       this.listData = this.listData.filter((item) => item.id !== column.id)
       localStorage.setItem('tasks', JSON.stringify(this.listData))
     },
+    createNewTask() {
+      this.openDetailSideBar = true
+      this.selectedTask = {
+        id: '',
+        title: '',
+        content: '',
+        status: '',
+        type: 'inventoryItem'
+      }
+    },
     addTaskItem(column) {
       this.listData = this.listData.map((col) => {
         if (col.id === column.id) {
@@ -88,6 +107,7 @@ export default {
       })
     },
     removeTask(task) {
+      if (task.id === '') return
       const indexToRemove = this.listData
         .find((col) => col.name === task.status)
         .tasks.findIndex((x) => x.id === task.id)
@@ -99,7 +119,7 @@ export default {
     updateTask(task) {
       if (!this.statusColumns.some((col) => col.name === task.status)) this.addColumn(task.status)
 
-      if (task.id === null) {
+      if (task.id === null || task.id === '') {
         this.listData
           .find((col) => col.name === task.status)
           .tasks.push({
@@ -182,5 +202,8 @@ export default {
 <style scoped lang="scss">
 .heading {
   padding-left: 9.6rem;
+}
+.toolbar {
+  margin: 0 9.6rem;
 }
 </style>
