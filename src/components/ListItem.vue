@@ -12,7 +12,6 @@
         class="p-0 h-full mr-1 list-item-controls__btn"
         @click="$emit('create-new')"
       >
-        bel
         <span class="material-icons">add</span>
       </PButton>
       <PButton size="small" class="p-0 h-full mr-2 list-item-controls__btn">
